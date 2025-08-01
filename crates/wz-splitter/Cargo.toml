@@ -17,6 +17,7 @@ hex = "0.4"
 async-trait = "0.1"
 lru = "0.12"
 thiserror = "1.0"
+futures = "0.3"
 
 # 仅在非 WASM 目标上使用 tokio
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]

@@ -12,12 +12,7 @@ use ::ui::{dynamic, fragment, lazy, text, view, IntoElement, View};
 
 pub fn bracket_wrap(children: impl ViewTuple) -> View {
   view()
-    .style(|s| {
-      s.justify_content(JustifyContent::FlexStart)
-        .align_items(AlignItems::Center)
-        .gap_row(1.0)
-        .gap_column(1.0)
-    })
+    .style(|s| s.items_center().gap_row(1.0).gap_column(1.0))
     .children(fragment((
       AsyncImage::new("UI/StatusBar.img/number/Lbracket"),
       fragment(children),
@@ -26,31 +21,26 @@ pub fn bracket_wrap(children: impl ViewTuple) -> View {
 }
 
 pub fn status_bar_number(f: impl (Fn() -> String) + 'static) -> View {
-  view()
-    .style(|s| {
-      s.justify_content(JustifyContent::FlexStart)
-        .align_items(AlignItems::FlexStart)
-    })
-    .children(dynamic(move || {
-      f()
-        .chars()
-        .filter_map(|ch: char| {
-          if ch.is_ascii_digit() {
-            Some(format!(
-              "UI/StatusBar.img/number/{}",
-              ch as usize - '0' as usize
-            ))
-          } else if ch == '/' {
-            Some("UI/StatusBar.img/number/slash".to_string())
-          } else if ch == '%' {
-            Some("UI/StatusBar.img/number/percent".to_string())
-          } else {
-            None
-          }
-        })
-        .map(AsyncImage::new)
-        .collect::<Vec<_>>()
-    }))
+  view().children(dynamic(move || {
+    f()
+      .chars()
+      .filter_map(|ch: char| {
+        if ch.is_ascii_digit() {
+          Some(format!(
+            "UI/StatusBar.img/number/{}",
+            ch as usize - '0' as usize
+          ))
+        } else if ch == '/' {
+          Some("UI/StatusBar.img/number/slash".to_string())
+        } else if ch == '%' {
+          Some("UI/StatusBar.img/number/percent".to_string())
+        } else {
+          None
+        }
+      })
+      .map(AsyncImage::new)
+      .collect::<Vec<_>>()
+  }))
 }
 
 pub fn status_bar() -> impl IntoElement {
@@ -84,13 +74,11 @@ pub fn status_bar() -> impl IntoElement {
             })
             .children((
               AsyncImage::new("UI/StatusBar.img/base/backgrnd"),
-              view()
-                .children(AsyncImage::new("UI/StatusBar.img/base/backgrnd2"))
-                .style(|s| {
-                  s.position(Position::Absolute)
-                    .left(length(4.0))
-                    .bottom(length(0.0))
-                }),
+              AsyncImage::new("UI/StatusBar.img/base/backgrnd2").style(|s| {
+                s.position(Position::Absolute)
+                  .left(length(4.0))
+                  .bottom(length(0.0))
+              }),
               crate::ui::chat::chat_box(),
               view()
                 .style(|s| {
@@ -193,23 +181,17 @@ pub fn status_bar() -> impl IntoElement {
                         s.margin_left(length(8.0))
                           .flex_grow(1.0)
                           .height(length(30.0))
-                          .flex_direction(FlexDirection::Column)
+                          .flex_col()
                       })
                       .children((
-                        view()
-                          .style(|s| {
-                            s.justify_content(JustifyContent::FlexStart)
-                              .align_items(AlignItems::FlexStart)
-                              .gap_column(length(2.0))
-                          })
-                          .children((
-                            (text(|| "魔法师")
-                              .style(|s| s.color(Color::WHITE).font_size(12.0).line_height(15.0))),
-                            bracket_wrap(
-                              text(|| "魔法师")
-                                .style(|s| s.color(Color::WHITE).font_size(12.0).line_height(15.0)),
-                            ),
-                          )),
+                        view().style(|s| s.gap_column(2)).children((
+                          (text(|| "魔法师")
+                            .style(|s| s.color(Color::WHITE).font_size(12.0).line_height(15.0))),
+                          bracket_wrap(
+                            text(|| "魔法师")
+                              .style(|s| s.color(Color::WHITE).font_size(12.0).line_height(15.0)),
+                          ),
+                        )),
                         text(|| "三个榔头")
                           .style(|s| s.color(Color::WHITE).font_size(12.0).line_height(15.0)),
                       )),
@@ -223,8 +205,7 @@ pub fn status_bar() -> impl IntoElement {
                 })
                 .children((
                   AsyncImage::new("UI/StatusBar.img/gauge/bar"),
-                  view()
-                    .children(AsyncImage::new("UI/StatusBar.img/gauge/graduation"))
+                  AsyncImage::new("UI/StatusBar.img/gauge/graduation")
                     .style(|s| s.position(Position::Absolute).bottom(length(0.0))),
                   view()
                     .style(|s| {
@@ -280,12 +261,7 @@ where
   F: Fn() -> i32 + 'static,
 {
   view()
-    .style(|s| {
-      s.justify_content(JustifyContent::FlexStart)
-        .align_items(AlignItems::FlexStart)
-        .gap_row(1.0)
-        .gap_column(1.0)
-    })
+    .style(|s| s.justify_start().items_start().gap_row(1.0).gap_column(1.0))
     .children(dynamic(move || {
       let val = value();
       let digit1 = (val / 10) % 10;

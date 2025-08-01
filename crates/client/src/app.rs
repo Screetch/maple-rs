@@ -1,4 +1,4 @@
-use crate::scene::MainScene;
+use crate::scenes::GameScene;
 use crate::scenes::login::login_scene;
 use crate::scenes::logo_scene;
 use crate::ui::{dialog, status_bar, world_map_window};
@@ -20,7 +20,7 @@ enum Stage {
 }
 
 pub fn app() -> impl IntoElement {
-  let stage = RwSignal::new(Stage::Pause);
+  let stage = RwSignal::new(Stage::Main);
   let open = RwSignal::new(false);
   // 000010000
   // 910000000
@@ -52,7 +52,7 @@ pub fn app() -> impl IntoElement {
           // dialog(),
         )),
       })),
-    // debug().style(|s| s.absolute().top(0).right(0).width(800).height(600)),
+    debug().style(|s| s.absolute().top(0).right(0).width(800).height(600)),
   ))
 }
 
@@ -64,10 +64,10 @@ pub fn map_scene(map_name: RwSignal<(String, Option<String>)>) -> impl IntoEleme
       let reader = reader.clone();
       let (_map_name, spawn) = map_name.get();
       async move {
-        MainScene::resource(&_map_name, spawn, reader).await.ok()
+        GameScene::resource(&_map_name, spawn, reader).await.ok()
       }
     },
-    move |data_opt: Option<(crate::scene::Player, crate::map::Map)>| {
+    move |data_opt: Option<(crate::player::Player, crate::map::Map)>| {
       let Some((player, map)) = data_opt else {
         return fragment(
           view()
@@ -76,7 +76,7 @@ pub fn map_scene(map_name: RwSignal<(String, Option<String>)>) -> impl IntoEleme
         );
       };
       
-      let main_scene = Rc::new(RefCell::new(MainScene::new(map, Some(map_name))));
+      let main_scene = Rc::new(RefCell::new(GameScene::new(map, Some(map_name))));
       main_scene.borrow_mut().set_player(player);
       use_event({
         let main_scene = main_scene.clone();

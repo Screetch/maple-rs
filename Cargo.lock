@@ -5597,6 +5597,7 @@ dependencies = [
  "anyhow",
  "async-trait",
  "clap",
+ "futures",
  "hex",
  "indicatif",
  "lru",

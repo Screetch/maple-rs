@@ -71,7 +71,11 @@ pub fn world_map_window(
   open: RwSignal<bool>,
   current_map: RwSignal<(String, Option<String>)>,
 ) -> impl IntoElement {
-  use_key(SDLK_W, move || open.set(!open.get()));
+  use_key(SDLK_W, move || {
+    println!("World map key W pressed, current open state: {}", open.get());
+    open.set(!open.get());
+    println!("World map key W processed, new open state: {}", open.get());
+  });
 
   dynamic(move || {
     if !open.get() {
@@ -86,7 +90,7 @@ pub fn world_map_window(
     let hovered_link = create_rw_signal(None);
     let content_size = vec2(640.0, 470.0);
 
-    fragment(view().children(lazy(
+    fragment(lazy(
       move || {
         let reader = reader.clone();
         let path = world_map_path.get();
@@ -308,6 +312,6 @@ pub fn world_map_window(
           None => fragment(text(|| "Loading world map...")),
         }
       },
-    )))
+    ))
   })
 }

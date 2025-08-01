@@ -5,7 +5,7 @@ mod title;
 mod world_select;
 
 use crate::map;
-use crate::scene::MainScene;
+use crate::scenes::GameScene;
 use crate::ui::async_image::AsyncImage;
 use crate::{wz::WzSplitReaderExt, WzSplitReaderContext};
 use ::ui::animation::use_raf;
@@ -142,7 +142,7 @@ pub fn login_scene(on_enter: impl Fn() + Clone + 'static) -> impl IntoElement {
         });
       });
 
-      let scene = Rc::new(RefCell::new(MainScene::new(
+      let scene = Rc::new(RefCell::new(GameScene::new(
         map,
         None,
       )));

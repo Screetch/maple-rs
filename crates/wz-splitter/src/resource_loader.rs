@@ -43,7 +43,7 @@ impl ResourceLoader for LocalResourceLoader {
         let manifest_path = self.split_dir.join("manifest.json");
         let content = tokio::fs::read_to_string(manifest_path).await?;
         Manifest::from_json(&content)
-            .map_err(|e| SplitReaderError::ManifestParseError(e))
+            .map_err(|e| SplitReaderError::ManifestParseError(e.to_string()))
     }
     
     async fn load_object(&self, hash: &str) -> Result<Vec<u8>, SplitReaderError> {
@@ -103,10 +103,10 @@ impl ResourceLoader for HttpResourceLoader {
         }
         
         let content = String::from_utf8(response.data)
-            .map_err(|e| SplitReaderError::ManifestParseError(anyhow::anyhow!("Invalid UTF-8: {}", e)))?;
+            .map_err(|e| SplitReaderError::ManifestParseError(format!("Invalid UTF-8: {}", e)))?;
         
         Manifest::from_json(&content)
-            .map_err(|e| SplitReaderError::ManifestParseError(e))
+            .map_err(|e| SplitReaderError::ManifestParseError(e.to_string()))
     }
     
     async fn load_object(&self, hash: &str) -> Result<Vec<u8>, SplitReaderError> {
@@ -147,10 +147,10 @@ impl ResourceLoader for HttpResourceLoader {
         }
         
         let content = String::from_utf8(response.data)
-            .map_err(|e| SplitReaderError::ManifestParseError(anyhow::anyhow!("Invalid UTF-8: {}", e)))?;
+            .map_err(|e| SplitReaderError::ManifestParseError(format!("Invalid UTF-8: {}", e)))?;
         
         Manifest::from_json(&content)
-            .map_err(|e| SplitReaderError::ManifestParseError(e))
+            .map_err(|e| SplitReaderError::ManifestParseError(e.to_string()))
     }
     
     async fn load_object(&self, hash: &str) -> Result<Vec<u8>, SplitReaderError> {
